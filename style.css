@@ -1,0 +1,55 @@
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #030509;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #22c55e;
+}
+
+/* Terminal Blinking Cursor */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.terminal-cursor::after {
+    content: '_';
+    animation: blink 1s infinite;
+    color: #22c55e;
+}
+
+/* Smooth Infinite Ticker Animation */
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-wrap {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ticker-move {
+    display: inline-block;
+    animation: marquee 28s linear infinite;
+}
+
+.ticker-move:hover {
+    animation-play-state: paused;
+}
+
+/* Row Hover Effects */
+tr:hover {
+    background-color: rgba(34, 197, 94, 0.03);
+}
+
