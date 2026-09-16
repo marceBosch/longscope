@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LongScope // Real-Time New RWA Coin Radar for Long.xyz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#05080f] text-[#e2e8f0] font-['JetBrains_Mono'] min-h-screen flex flex-col selection:bg-[#22c55e] selection:text-black">
+
+    <!-- Top Ticker / Scrolling Animation Bar -->
+    <div class="bg-[#030509] border-b border-[#22c55e]/20 overflow-hidden py-1.5 text-[11px] text-slate-400">
+        <div class="ticker-wrap">
+            <div class="ticker-move">
+                <span class="mx-6 text-[#22c55e]">⚡ SYSTEM STATUS: ONLINE [ROBINHOOD CHAIN 1E18]</span>
+                <span class="mx-6 text-slate-500">|</span>
+                <span class="mx-6 text-cyan-400">🔍 SCANNING ACTIVE RWA VAULTS (60+ PAIRS)</span>
+                <span class="mx-6 text-slate-500">|</span>
+                <span class="mx-6 text-purple-400">🚀 BUILDER: @marceBosch</span>
+                <span class="mx-6 text-slate-500">|</span>
+                <span class="mx-6 text-[#22c55e]">🔥 NEW TOKEN PAIR DETECTED IN REAL-TIME</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="border-b border-slate-800 bg-[#070b14]/90 backdrop-blur sticky top-0 z-50 px-4 md:px-8 py-3.5 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <img src="https://iili.io/nnGDYox.md.jpg" alt="LongScope Logo" class="w-9 h-9 rounded-xl object-cover border border-[#22c55e]/40 shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+            <div>
+                <h1 class="text-base md:text-lg font-bold tracking-wider text-white flex items-center space-x-2">
+                    <span>LONG</span><span class="text-[#22c55e]">SCOPE</span>
+                    <span class="text-[9px] bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/30 px-1.5 py-0.5 rounded font-mono">v2.4</span>
+                </h1>
+                <span class="text-[10px] text-slate-400">New RWA Coin Radar // Long.xyz</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="https://x.com/marceBosch" target="_blank" class="hidden sm:inline-block text-xs text-slate-400 hover:text-[#22c55e] transition">
+                Builder: <strong class="text-purple-400">@marceBosch</strong>
+            </a>
+            <a href="https://app.long.xyz/" target="_blank" class="text-xs px-4 py-2 rounded-lg bg-[#22c55e] text-black font-bold hover:bg-[#16a34a] transition shadow-[0_0_15px_rgba(34,197,94,0.4)] flex items-center space-x-1.5">
+                <span>Open Long.xyz</span>
+                <span>↗</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+        
+        <!-- Control / Metrics Dashboard Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-[#0b101d]/80 border border-slate-800/80 rounded-xl p-4 backdrop-blur">
+                <div class="text-[10px] uppercase text-slate-500 tracking-wider">Active Scanned Pairs</div>
+                <div class="text-xl font-bold text-white mt-1">62 RWA Stocks</div>
+                <div class="text-[9px] text-[#22c55e] mt-1">● Live Data Synced</div>
+            </div>
+            <div class="bg-[#0b101d]/80 border border-slate-800/80 rounded-xl p-4 backdrop-blur">
+                <div class="text-[10px] uppercase text-slate-500 tracking-wider">New Coins (24h)</div>
+                <div id="statNewCoins" class="text-xl font-bold text-[#22c55e] mt-1">14 Detected</div>
+                <div class="text-[9px] text-slate-400 mt-1">Updated in real-time</div>
+            </div>
+            <div class="bg-[#0b101d]/80 border border-slate-800/80 rounded-xl p-4 backdrop-blur">
+                <div class="text-[10px] uppercase text-slate-500 tracking-wider">24h Volume Tracked</div>
+                <div class="text-xl font-bold text-cyan-400 mt-1">$4,829,150</div>
+                <div class="text-[9px] text-cyan-500/80 mt-1">Robinhood Chain Vol</div>
+            </div>
+            <div class="bg-[#0b101d]/80 border border-slate-800/80 rounded-xl p-4 backdrop-blur flex flex-col justify-between">
+                <div class="text-[10px] uppercase text-slate-500 tracking-wider">Radar Status</div>
+                <div class="flex items-center space-x-2 mt-1">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#22c55e] animate-ping"></span>
+                    <span class="text-xs font-bold text-white tracking-wide terminal-cursor">SCANNING</span>
+                </div>
+                <button id="refreshBtn" class="mt-2 text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 py-1 px-2 rounded transition text-center">
+                    Force Refresh Feed ↻
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Content: Live New Coin Table / Feed -->
+        <section class="bg-[#0b101d]/90 border border-slate-800/90 rounded-2xl p-5 shadow-2xl backdrop-blur space-y-4">
+            
+            <!-- Table Toolbar & Filters -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-800">
+                <div>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-[#22c55e]">// New RWA-Meme Coin Stream</h2>
+                    <p class="text-[11px] text-slate-400">Live incoming token deployments paired with Long.xyz equity vaults.</p>
+                </div>
+                <div class="flex items-center space-x-2 w-full sm:w-auto">
+                    <input type="text" id="searchInput" placeholder="Search token or stock (e.g. NVDA, AI)..." 
+                        class="bg-black/60 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:border-[#22c55e] focus:outline-none w-full sm:w-64">
+                </div>
+            </div>
+
+            <!-- Table List -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-black/40 text-slate-500 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                        <tr>
+                            <th class="py-3 px-4">Token Name / Ticker</th>
+                            <th class="py-3 px-4">RWA Stock Pair</th>
+                            <th class="py-3 px-4">Time Deployed</th>
+                            <th class="py-3 px-4">24h Volume</th>
+                            <th class="py-3 px-4">Initial Liquidity</th>
+                            <th class="py-3 px-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coinTableBody" class="divide-y divide-slate-800/50">
+                        <!-- Dynamic JavaScript Injection -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center pt-2">
+                <span class="text-[10px] text-slate-500">Showing newly launched tokens verified via Long.xyz protocol contract events.</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 text-center py-4 text-xs text-slate-500 bg-[#030509]">
+        LongScope // Developed by <a href="https://x.com/marceBosch" target="_blank" class="text-purple-400 hover:underline">@marceBosch</a> for Long.xyz Ecosystem
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
